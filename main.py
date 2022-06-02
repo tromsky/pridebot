@@ -14,6 +14,8 @@ COLOUR_BOUNDARIES = [
     ([120, 50, 20], [135, 255, 255]),  # violet/purple
 ]
 
+USERNAMES = ["exxonmobil", "RogersHelps", "Facebook", "fbsecurity"]
+
 
 def check_image_contains_raindow(image_path):
     """
@@ -57,24 +59,25 @@ def main():
     bearer_token = os.environ.get("BEARER_TOKEN")
     auth_headers = {"Authorization": f"Bearer {bearer_token}"}
 
-    # username = "exxonmobil"  # False
-    # username = "RogersHelps"  # True
-    username = "Facebook"  # True
-    # username = "fbsecurity"  # False
+    for username in USERNAMES:
 
-    # get the URL for the user's profile pic
-    user = requests.get(
-        f"https://api.twitter.com/2/users/by/username/{username}?user.fields=profile_image_url",
-        headers=auth_headers,
-    )
-    profile_pic = requests.get(user.json()["data"]["profile_image_url"])
-    profile_pic_path = f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
+        # get the URL for the user's profile pic
+        user = requests.get(
+            f"https://api.twitter.com/2/users/by/username/{username}?user.fields=profile_image_url",
+            headers=auth_headers,
+        )
+        profile_pic = requests.get(user.json()["data"]["profile_image_url"])
+        profile_pic_path = (
+            f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
+        )
 
-    # write the profile pic
-    with open(profile_pic_path, "wb") as f:
-        f.write(profile_pic.content)
+        # write the profile pic
+        with open(profile_pic_path, "wb") as f:
+            f.write(profile_pic.content)
 
-    print(f"Image contains rainbow: {check_image_contains_raindow(profile_pic_path)}")
+        print(
+            f"{username}'s profile pic likely contains rainbow: {check_image_contains_raindow(profile_pic_path)}"
+        )
 
 
 if __name__ == "__main__":
