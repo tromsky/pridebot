@@ -13,3 +13,10 @@ Create a environment variable to store the API bearer token
 Run the script
 
 `python main.py`
+
+
+## Tests
+
+Run unit tests
+
+`python -m tests.unittests`
