@@ -16,7 +16,7 @@ Select the Python version (Optional)
 
 Create a virtual environment (Optional)
 
-`python -m venv . --copies` && source bin/activate`
+`python -m venv . --copies && source bin/activate`
 
 Install the requirements
 
