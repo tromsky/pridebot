@@ -17,7 +17,7 @@ COLOUR_BOUNDARIES = [
 USERNAMES = ["exxonmobil", "RogersHelps", "Facebook", "fbsecurity"]
 
 
-def check_image_contains_raindow(image_path):
+def check_image_contains_colours(image_path, colour_boundaries):
     """
     Given an image path, check to see if the image likely contains
     anything like a rainbow by checking for existance of ROYGBV
@@ -27,7 +27,7 @@ def check_image_contains_raindow(image_path):
     """
 
     # set a control flag and load the image
-    image_contains_rainbow = False
+    image_contains_colours = False
     image = cv2.imread(image_path)
 
     # loop over the colour boundaries
@@ -43,14 +43,14 @@ def check_image_contains_raindow(image_path):
         mask = cv2.inRange(img_hsv, lower, upper)
 
         # check for perfect saturation in the mask
-        image_contains_rainbow = 255 in mask
+        image_contains_colours = 255 in mask
 
         # for debugging, hit "0" key to continue
         # output = cv2.bitwise_and(image, image, mask=mask)
         # cv2.imshow("images", np.hstack([image, output]))
         # cv2.waitKey(0)
 
-    return image_contains_rainbow
+    return image_contains_colours
 
 
 def main():
@@ -76,7 +76,7 @@ def main():
             f.write(profile_pic.content)
 
         print(
-            f"{username}'s profile pic likely contains rainbow: {check_image_contains_raindow(profile_pic_path)}"
+            f"{username}'s profile pic likely contains rainbow: {check_image_contains_colours(profile_pic_path, COLOUR_BOUNDARIES)}"
         )
 
 
