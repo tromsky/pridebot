@@ -1,6 +1,6 @@
 import unittest
 
-from main import COLOUR_BOUNDARIES, check_image_contains_colours
+from main import RAINBOW_BOUNDARIES, check_image_contains_colours
 
 
 class TestSuite(unittest.TestCase):
@@ -11,6 +11,9 @@ class TestSuite(unittest.TestCase):
     def test_rainbow_check(self):
         """
         Checks for known images for rainbows
+
+        Facebook and RogersHelps contain raindows
+        exxonmobil and fbsecurity do not contain rainbows
         """
 
         exxonmobil = "tests/profile_pics/exxonmobil_pp.png"
@@ -18,10 +21,10 @@ class TestSuite(unittest.TestCase):
         rogers_helps = "tests/profile_pics/RogersHelps_pp.png"
         fb_security = "tests/profile_pics/fbsecurity_pp.png"
 
-        self.assertFalse(check_image_contains_colours(exxonmobil, COLOUR_BOUNDARIES))
-        self.assertTrue(check_image_contains_colours(facebook, COLOUR_BOUNDARIES))
-        self.assertTrue(check_image_contains_colours(rogers_helps, COLOUR_BOUNDARIES))
-        self.assertFalse(check_image_contains_colours(fb_security, COLOUR_BOUNDARIES))
+        self.assertFalse(check_image_contains_colours(exxonmobil, RAINBOW_BOUNDARIES))
+        self.assertTrue(check_image_contains_colours(facebook, RAINBOW_BOUNDARIES))
+        self.assertTrue(check_image_contains_colours(rogers_helps, RAINBOW_BOUNDARIES))
+        self.assertFalse(check_image_contains_colours(fb_security, RAINBOW_BOUNDARIES))
 
 
 if __name__ == "__main__":

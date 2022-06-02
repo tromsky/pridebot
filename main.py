@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import requests
 
-COLOUR_BOUNDARIES = [
+RAINBOW_BOUNDARIES = [
     ([175, 50, 20], [180, 255, 255]),  # red
     ([10, 50, 20], [25, 255, 255]),  # orange/brown
     ([28, 50, 20], [35, 255, 255]),  # yellow
@@ -31,7 +31,7 @@ def check_image_contains_colours(image_path, colour_boundaries):
     image = cv2.imread(image_path)
 
     # loop over the colour boundaries
-    for (lower, upper) in COLOUR_BOUNDARIES:
+    for (lower, upper) in colour_boundaries:
 
         # create NumPy arrays from the colour boundaries
         lower = np.array(lower, dtype="uint8")
@@ -76,7 +76,7 @@ def main():
             f.write(profile_pic.content)
 
         print(
-            f"{username}'s profile pic likely contains rainbow: {check_image_contains_colours(profile_pic_path, COLOUR_BOUNDARIES)}"
+            f"{username}'s profile pic likely contains rainbow: {check_image_contains_colours(profile_pic_path, RAINBOW_BOUNDARIES)}"
         )
 
 
