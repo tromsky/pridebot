@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 
-import cv2
 import requests
 import tweepy
 
