@@ -17,7 +17,7 @@ def main():
 
     # write the profile pic
     with open(profile_pic_path, "wb") as f:
-         f.write(profile_pic.content)
+        f.write(profile_pic.content)
 
 
 if __name__ == "__main__":
