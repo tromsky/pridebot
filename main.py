@@ -4,6 +4,7 @@ from datetime import datetime
 import cv2
 import numpy as np
 import requests
+import tweepy
 
 RAINBOW_BOUNDARIES = [
     ([175, 50, 20], [180, 255, 255]),  # red
@@ -54,22 +55,18 @@ def check_image_contains_colours(image_path, colour_boundaries):
 
 
 def main():
-
     # build header with bearer token
     bearer_token = os.environ.get("BEARER_TOKEN")
     auth_headers = {"Authorization": f"Bearer {bearer_token}"}
 
     for username in USERNAMES:
 
-        # get the URL for the user's profile pic
-        user = requests.get(
-            f"https://api.twitter.com/2/users/by/username/{username}?user.fields=profile_image_url",
-            headers=auth_headers,
-        )
-        profile_pic = requests.get(user.json()["data"]["profile_image_url"])
-        profile_pic_path = (
-            f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
-        )
+        bearer_token = os.environ.get("BEARER_TOKEN")
+        client = tweepy.Client(bearer_token)
+
+        user = client.get_user(username=username, user_fields="profile_image_url")
+        profile_pic = requests.get(user[0].data["profile_image_url"])
+        profile_pic_path = f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
 
         # write the profile pic
         with open(profile_pic_path, "wb") as f:
