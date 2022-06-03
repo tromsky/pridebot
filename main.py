@@ -66,10 +66,11 @@ def main():
 
     for username in USERNAMES:
         user = client.get_user(username=username, user_fields="profile_image_url")
-        print(user)
         profile_pic_url = user[0].data["profile_image_url"]
         profile_pic = requests.get(profile_pic_url)
-        profile_pic_path = f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
+        profile_pic_path = (
+            f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
+        )
 
         # write the profile pic
         with open(profile_pic_path, "wb") as f:
