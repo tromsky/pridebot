@@ -6,6 +6,8 @@ import numpy as np
 import requests
 import tweepy
 
+from models import ProfilePicture, User
+
 RAINBOW_BOUNDARIES = [
     ([175, 50, 20], [180, 255, 255]),  # red
     ([10, 50, 20], [25, 255, 255]),  # orange/brown
@@ -57,23 +59,28 @@ def check_image_contains_colours(image_path, colour_boundaries):
 def main():
     # build header with bearer token
     bearer_token = os.environ.get("BEARER_TOKEN")
-    auth_headers = {"Authorization": f"Bearer {bearer_token}"}
+    client = tweepy.Client(bearer_token)
 
     for username in USERNAMES:
-
-        bearer_token = os.environ.get("BEARER_TOKEN")
-        client = tweepy.Client(bearer_token)
-
         user = client.get_user(username=username, user_fields="profile_image_url")
-        profile_pic = requests.get(user[0].data["profile_image_url"])
+        profile_pic_url = user[0].data["profile_image_url"]
+        profile_pic = requests.get(profile_pic_url)
         profile_pic_path = f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
 
         # write the profile pic
         with open(profile_pic_path, "wb") as f:
             f.write(profile_pic.content)
 
-        print(
-            f"{username}'s profile pic likely contains rainbow: {check_image_contains_colours(profile_pic_path, RAINBOW_BOUNDARIES)}"
+        has_rainbow = check_image_contains_colours(profile_pic_path, RAINBOW_BOUNDARIES)
+        print(f"{username}'s profile pic likely contains rainbow: {has_rainbow}")
+
+        # store in db
+        user, _ = User.get_or_create(username=username)
+        ProfilePicture.create(
+            user=user,
+            url=profile_pic_url,
+            local_path=profile_pic_path,
+            has_rainbow=has_rainbow,
         )
 
 

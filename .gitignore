@@ -69,7 +69,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
+# db.sqlite3  # commenting out since we actually want to track this in the repo
 db.sqlite3-journal
 
 # Flask stuff:
