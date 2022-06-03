@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import requests
 
+from models import ProfilePicture, User
+
 RAINBOW_BOUNDARIES = [
     ([175, 50, 20], [180, 255, 255]),  # red
     ([10, 50, 20], [25, 255, 255]),  # orange/brown
@@ -62,11 +64,12 @@ def main():
     for username in USERNAMES:
 
         # get the URL for the user's profile pic
-        user = requests.get(
+        twitter_user = requests.get(
             f"https://api.twitter.com/2/users/by/username/{username}?user.fields=profile_image_url",
             headers=auth_headers,
         )
-        profile_pic = requests.get(user.json()["data"]["profile_image_url"])
+        profile_pic_url = twitter_user.json()["data"]["profile_image_url"]
+        profile_pic = requests.get(profile_pic_url)
         profile_pic_path = (
             f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
         )
@@ -75,8 +78,16 @@ def main():
         with open(profile_pic_path, "wb") as f:
             f.write(profile_pic.content)
 
-        print(
-            f"{username}'s profile pic likely contains rainbow: {check_image_contains_colours(profile_pic_path, RAINBOW_BOUNDARIES)}"
+        has_rainbow = check_image_contains_colours(profile_pic_path, RAINBOW_BOUNDARIES)
+        print(f"{username}'s profile pic likely contains rainbow: {has_rainbow}")
+
+        # store in db
+        user, _ = User.get_or_create(username=username)
+        ProfilePicture.create(
+            user=user,
+            url=profile_pic_url,
+            local_path=profile_pic_path,
+            has_rainbow=has_rainbow,
         )
 
 
