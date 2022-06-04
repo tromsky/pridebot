@@ -17,7 +17,10 @@ RAINBOW_BOUNDARIES = [
     ([120, 50, 20], [135, 255, 255]),  # violet/purple
 ]
 
-USERNAMES = ["exxonmobil", "RogersHelps", "Facebook", "fbsecurity"]
+USERNAMES = []
+with open("usernames.txt", "r") as username_file:
+    for username in username_file:
+        USERNAMES.append(username.strip())
 
 
 def check_image_contains_colours(image_path, colour_boundaries):
@@ -65,7 +68,9 @@ def main():
         user = client.get_user(username=username, user_fields="profile_image_url")
         profile_pic_url = user[0].data["profile_image_url"]
         profile_pic = requests.get(profile_pic_url)
-        profile_pic_path = f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
+        profile_pic_path = (
+            f"profile_pics/{username}_pp_{datetime.utcnow().isoformat()}.png"
+        )
 
         # write the profile pic
         with open(profile_pic_path, "wb") as f:
